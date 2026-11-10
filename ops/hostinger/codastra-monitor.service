@@ -1,0 +1,19 @@
+[Unit]
+Description=CodAstra application and server health monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=codastra
+Group=codastra
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/platterlabs/backend/.env
+EnvironmentFile=/etc/codastra-monitor.env
+ExecStart=/usr/bin/node /opt/codastra-monitor/monitor.mjs
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/codastra-monitor
+UMask=0027

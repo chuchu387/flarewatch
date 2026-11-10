@@ -11,6 +11,7 @@ export default defineConfig({
       'services/worker/dist/**',
       'apps/status-page/src/routeTree.gen.ts',
       'apps/status-page/worker-configuration.d.ts',
+      'ops/hostinger/*.mjs',
       'tools/oxlint/anti-slop/**',
     ],
     jsPlugins: [

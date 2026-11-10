@@ -1,0 +1,29 @@
+[Unit]
+Description=CodAstra loopback-only telemetry agent
+After=network-online.target codastra-monitor.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=codastra
+Group=codastra
+Environment=NODE_ENV=production
+Environment=PORT=5097
+ExecStart=/usr/bin/node /opt/codastra-monitor/telemetry.mjs
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

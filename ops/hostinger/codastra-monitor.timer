@@ -1,0 +1,12 @@
+[Unit]
+Description=Run CodAstra server monitoring every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+RandomizedDelaySec=15s
+Persistent=true
+Unit=codastra-monitor.service
+
+[Install]
+WantedBy=timers.target

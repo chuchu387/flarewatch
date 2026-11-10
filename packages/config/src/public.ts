@@ -15,5 +15,20 @@ export const pageConfig: PageConfig = {
       'classora_api',
       'attendora_api',
     ],
+    Domains: ['domain_platterlabs', 'domain_bridgelabs', 'domain_codastra'],
+    'Infrastructure (private)': [
+      'hostinger_proxy',
+      'hostinger_overall',
+      'hostinger_resources',
+      'hostinger_infrastructure',
+      'hostinger_integrations',
+      'hostinger_monitor_heartbeat',
+    ],
+    'Certificates (private)': [
+      'ssl_platterlabs',
+      'ssl_bridgelabs',
+      'ssl_astrafreight',
+      'ssl_codastra',
+    ],
   },
 };
