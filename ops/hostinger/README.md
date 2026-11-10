@@ -58,3 +58,23 @@ curl -fsS https://status.codastralabs.com/api/data
 The telemetry service intentionally binds to `127.0.0.1:5097`. The proxy listens
 on port `5098`, which must remain blocked by UFW; external access goes through
 HTTPS and the authenticated Nginx route only.
+
+## Cloudflare deployment
+
+GitHub Actions requires `CLOUDFLARE_ACCOUNT_ID` and a dedicated
+`CLOUDFLARE_API_TOKEN`. Create the token from Cloudflare's **Edit Cloudflare
+Workers** template, scope it to the CodAstra account and `codastralabs.com` zone,
+and retain these capabilities:
+
+- edit the existing `flarewatch` and `flarewatch-worker` Workers;
+- read/create the `flarewatch-state` KV namespace;
+- edit the Worker route for `status.codastralabs.com`.
+
+Store the value only as the GitHub Actions secret `CLOUDFLARE_API_TOKEN`. Do not
+copy a local Wrangler OAuth credential into GitHub.
+
+The API monitors run first from Cloudflare and confirm failures through the
+authenticated Hostinger proxy. This protects against a Cloudflare edge or route
+false positive, but it is not independent of the Hostinger machine. A fully
+independent second infrastructure location requires either a Globalping token or
+a proxy on another server/region.
