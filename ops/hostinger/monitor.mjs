@@ -201,20 +201,34 @@ const checkMongoDb = async () => {
   }
 };
 
+const checkExternalIntegration = async ({ key, name, url, headers }) => {
+  let lastError = 'Unknown error';
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        headers,
+        signal: AbortSignal.timeout(10000),
+      });
+      if (response.ok) return { key, name, ok: true, detail: 'API authenticated' };
+      lastError = `HTTP ${response.status}`;
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : String(error);
+    }
+    if (attempt < 3) await sleep(attempt * 1000);
+  }
+  return { key, name, ok: false, error: lastError };
+};
+
 const checkBrevo = async () => {
   const name = 'Brevo email';
   if (!process.env.BREVO_API_KEY)
     return { key: 'brevo', name, ok: false, error: 'BREVO_API_KEY is missing' };
-  try {
-    const response = await fetch('https://api.brevo.com/v3/account', {
-      headers: { accept: 'application/json', 'api-key': process.env.BREVO_API_KEY },
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) return { key: 'brevo', name, ok: false, error: `HTTP ${response.status}` };
-    return { key: 'brevo', name, ok: true, detail: 'API authenticated' };
-  } catch (error) {
-    return { key: 'brevo', name, ok: false, error: error.message };
-  }
+  return checkExternalIntegration({
+    key: 'brevo',
+    name,
+    url: 'https://api.brevo.com/v3/account',
+    headers: { accept: 'application/json', 'api-key': process.env.BREVO_API_KEY },
+  });
 };
 
 const checkCloudinary = async () => {
@@ -226,21 +240,13 @@ const checkCloudinary = async () => {
   } = process.env;
   if (!cloudName || !apiKey || !apiSecret)
     return { key: 'cloudinary', name, ok: false, error: 'Cloudinary credentials are missing' };
-  try {
-    const authorization = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/ping`,
-      {
-        headers: { authorization: `Basic ${authorization}` },
-        signal: AbortSignal.timeout(10000),
-      },
-    );
-    if (!response.ok)
-      return { key: 'cloudinary', name, ok: false, error: `HTTP ${response.status}` };
-    return { key: 'cloudinary', name, ok: true, detail: 'API authenticated' };
-  } catch (error) {
-    return { key: 'cloudinary', name, ok: false, error: error.message };
-  }
+  const authorization = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
+  return checkExternalIntegration({
+    key: 'cloudinary',
+    name,
+    url: `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/ping`,
+    headers: { authorization: `Basic ${authorization}` },
+  });
 };
 
 const sendEmail = async ({ subject, text }) => {
