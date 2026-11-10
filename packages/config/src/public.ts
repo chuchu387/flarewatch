@@ -1,14 +1,19 @@
 import type { PageConfig } from '@flarewatch/shared';
 
 export const pageConfig: PageConfig = {
-  title: 'FlareWatch',
+  title: 'CodAstra Systems Status',
+  timezone: 'Asia/Kathmandu',
   links: [
-    { label: 'GitHub', link: 'https://github.com/saminnet/flarewatch' },
-    { label: 'Cloudflare', link: 'https://www.cloudflare.com/' },
+    { label: 'CodAstra Labs', link: 'https://codastralabs.com' },
+    { label: 'GitHub', link: 'https://github.com/chuchu387' },
   ],
   group: {
-    Websites: ['demo_example', 'demo_cloudflare_docs'],
-    APIs: ['demo_cloudflare_trace', 'demo_one_dns_trace'],
-    'Status Feeds': ['demo_cloudflare_status', 'demo_github_status'],
+    'Production APIs': [
+      'platterlabs_api',
+      'bridgelabs_api',
+      'astrafreight_api',
+      'classora_api',
+      'attendora_api',
+    ],
   },
 };
