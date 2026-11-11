@@ -55,6 +55,9 @@ sudo journalctl -u codastra-monitor.service -n 100 --no-pager
 curl -fsS https://status.codastralabs.com/api/data
 ```
 
+After an automated deployment, the status page and `/api/data` endpoint must
+both return HTTP 200 before the release is considered verified.
+
 The telemetry service intentionally binds to `127.0.0.1:5097`. The proxy listens
 on port `5098`, which must remain blocked by UFW; external access goes through
 HTTPS and the authenticated Nginx route only.
